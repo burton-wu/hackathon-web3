@@ -5,6 +5,32 @@ const exports = {...PlayerViews};
 
 const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
 
+exports.GetHand = class extends React.Component {
+  render() {
+    const {parent, playable, hand} = this.props;
+    return (
+      <div>
+        {hand ? 'It was a draw! Pick again.' : ''}
+        <br />
+        {!playable ? 'Please wait...' : ''}
+        <br />
+        <button
+          disabled={!playable}
+          onClick={() => parent.playHand('#1')}
+        >Module #1</button>
+        <button
+          disabled={!playable}
+          onClick={() => parent.playHand('#2')}
+        >Module #2</button>
+        <button
+          disabled={!playable}
+          onClick={() => parent.playHand('#3')}
+        >Module #3</button>
+      </div>
+    );
+  }
+}
+
 exports.Wrapper = class extends React.Component {
   render() {
     const {content} = this.props;

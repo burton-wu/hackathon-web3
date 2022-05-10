@@ -16,16 +16,16 @@ exports.GetHand = class extends React.Component {
         <br />
         <button
           disabled={!playable}
-          onClick={() => parent.playHand('#1')}
-        >Module #1</button>
+          onClick={() => parent.playHand('ROCK')}
+        >Rock</button>
         <button
           disabled={!playable}
-          onClick={() => parent.playHand('#2')}
-        >Module #2</button>
+          onClick={() => parent.playHand('PAPER')}
+        >Paper</button>
         <button
           disabled={!playable}
-          onClick={() => parent.playHand('#3')}
-        >Module #3</button>
+          onClick={() => parent.playHand('SCISSORS')}
+        >Scissors</button>
       </div>
     );
   }
@@ -35,7 +35,7 @@ exports.WaitingForResults = class extends React.Component {
   render() {
     return (
       <div>
-        Waiting...
+        Waiting for results...
       </div>
     );
   }

@@ -20,11 +20,11 @@ export const main = Reach.App(() => {
   init();
   
   // Display The initial weekly status
-  Creator.only(() => {
+  Alice.only(() => {
     const weekOutcomeArray0 = declassify(interact.seeWeekOutcomeArray());
   });
 
-  Creator.publish(weekOutcomeArray0);
+  Alice.publish(weekOutcomeArray0);
   commit();
 
   // Alice requests assessment for Week X

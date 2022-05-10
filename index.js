@@ -8,11 +8,15 @@ import * as backend from './build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 const reach = loadStdlib(process.env);
 
-const handToInt = {'ROCK': 0, 'PAPER': 1, 'SCISSORS': 2};
-const intToOutcome = ['Bob wins!', 'Draw!', 'Alice wins!'];
+const handToInt = {'#1': 0, '#2': 1, '#3': 2};
+//const intToOutcome = ['Bob wins!', 'Draw!', 'Alice wins!'];
 const {standardUnit} = reach;
-const defaults = {defaultFundAmt: '10', defaultWager: '3', standardUnit};
+const defaults = {defaultFundAmt: '10', /*defaultWager: '3',*/ standardUnit};
 
+// Assume Alice has not completed any Weeks
+let weekOutcomeArray = [false, false, false];
+
+// No change is required here
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -24,12 +28,15 @@ class App extends React.Component {
     const bal = reach.formatCurrency(balAtomic, 4);
     this.setState({acc, bal});
     if (await reach.canFundFromFaucet()) {
+      //console.log("view: FundAccount");
       this.setState({view: 'FundAccount'});
     } else {
+      //console.log("view: DeployerOrAttacher");
       this.setState({view: 'DeployerOrAttacher'});
     }
   }
   async fundAccount(fundAmount) {
+    console.log("async fundAccount");
     await reach.fundFromFaucet(this.state.acc, reach.parseCurrency(fundAmount));
     this.setState({view: 'DeployerOrAttacher'});
   }
@@ -40,36 +47,36 @@ class App extends React.Component {
 }
 
 class Player extends React.Component {
-  random() { return reach.hasRandom.random(); }
-  async getHand() { // Fun([], UInt)
-    const hand = await new Promise(resolveHandP => {
-      this.setState({view: 'GetHand', playable: true, resolveHandP});
-    });
-    this.setState({view: 'WaitingForResults', hand});
-    return handToInt[hand];
-  }
-  seeOutcome(i) { this.setState({view: 'Done', outcome: intToOutcome[i]}); }
-  informTimeout() { this.setState({view: 'Timeout'}); }
-  playHand(hand) { this.state.resolveHandP(hand); }
+  // seeWeekOutcomeArray
+  seeWeekOutcomeArray(i) { this.setState({view: 'Done', outcome: i}); }
 }
 
+// Alice
 class Deployer extends Player {
-  constructor(props) {
-    super(props);
-    this.state = {view: 'SetWager'};
+  setWager() {
+    console.log("setWager");
+    this.setState({view: 'Deploy'});
   }
-  setWager(wager) { this.setState({view: 'Deploy', wager}); }
   async deploy() {
     const ctc = this.props.acc.contract(backend);
     this.setState({view: 'Deploying', ctc});
-    this.wager = reach.parseCurrency(this.state.wager); // UInt
+    //this.wager = reach.parseCurrency(this.state.wager); // UInt
     this.deadline = {ETH: 10, ALGO: 100, CFX: 1000}[reach.connector]; // UInt
     backend.Alice(ctc, this);
     const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
     this.setState({view: 'WaitingForAttacher', ctcInfoStr});
   }
+  // provideWeek
+  async provideWeek() { // Fun([], UInt)
+    const hand = await new Promise(resolveHandP => {
+      this.setState({view: 'GetHand', playable: true, resolveHandP});
+    });
+    return handToInt[hand];
+  }
   render() { return renderView(this, DeployerViews); }
 }
+
+// Creator
 class Attacher extends Player {
   constructor(props) {
     super(props);
@@ -78,17 +85,12 @@ class Attacher extends Player {
   attach(ctcInfoStr) {
     const ctc = this.props.acc.contract(backend, JSON.parse(ctcInfoStr));
     this.setState({view: 'Attaching'});
-    backend.Bob(ctc, this);
+    backend.Creator(ctc, this);
   }
-  async acceptWager(wagerAtomic) { // Fun([UInt], Null)
-    const wager = reach.formatCurrency(wagerAtomic, 4);
-    return await new Promise(resolveAcceptedP => {
-      this.setState({view: 'AcceptTerms', wager, resolveAcceptedP});
-    });
-  }
-  termsAccepted() {
-    this.state.resolveAcceptedP();
-    this.setState({view: 'WaitingForTurn'});
+  // updateWeekOutcomeArray
+  // react does not like this block of code?
+  updateWeekOutcomeArray(weekNumber, weekOutcome) {
+    weekOutcomeArray[weekNumber] = weekOutcome;
   }
   render() { return renderView(this, AttacherViews); }
 }
