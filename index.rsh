@@ -1,5 +1,3 @@
-//Testing GitHub3
-
 'reach 0.1';
 'use strict';
 
