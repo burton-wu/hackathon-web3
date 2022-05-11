@@ -21,7 +21,7 @@ const {standardUnit} = reach;
 const defaults = {defaultFundAmt: '10', /*defaultWager: '0.001',*/ standardUnit};
 
 // Assume Alice has not completed any Weeks
-let weekOutcomeArray = [false, false, false];
+let weekOutcomeArray = [true, false, false];
 
 // No change is required here
 class App extends React.Component {
@@ -57,7 +57,7 @@ class Player extends React.Component {
     // Will mirror this with "Done" to show the results
     this.setState({view: 'Done', outcome: weekOutcomeArray});
     if ( weekOutcomeArray[1] == true ) {
-      console.log(`I want to do something here`);
+      console.log(`I want to do something here <- logos`); // More important to be on Alice's side
     }
     // Plus an additional button to go back to provideWeek screen (except init)
     return weekOutcomeArray;
@@ -100,9 +100,11 @@ class Attacher extends Player {
     backend.Creator(ctc, this);
     console.log("Contract has been attahed");
   }
+  // BW: Alice doesn't see the outcome of this update? Why?
   async updateWeekOutcomeArray(weekNumber, weekOutcome) {
     weekOutcomeArray[weekNumber] = weekOutcome;
     console.log(`Week index ${weekNumber} has been updated with ${weekOutcome}`);
+    console.log(`Weekoutcome Array is ${weekOutcomeArray}`);
   }
   render() { return renderView(this, AttacherViews); }
 }
