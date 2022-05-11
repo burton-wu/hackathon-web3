@@ -1,3 +1,5 @@
+//REACH_CONNECTOR_MODE=ALGO ../reach react
+
 import React from 'react';
 import AppViews from './views/AppViews';
 import DeployerViews from './views/DeployerViews';
@@ -8,10 +10,15 @@ import * as backend from './build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 const reach = loadStdlib(process.env);
 
+// Additional codes to run on Algorand
+import { ALGO_MyAlgoConnect as MyAlgoConnect } from '@reach-sh/stdlib';
+reach.setWalletFallback(reach.walletFallback({
+  providerEnv: 'TestNet', MyAlgoConnect }));
+
 const handToInt = {'#1': 0, '#2': 1, '#3': 2};
 //const intToOutcome = ['Bob wins!', 'Draw!', 'Alice wins!'];
 const {standardUnit} = reach;
-const defaults = {defaultFundAmt: '10', /*defaultWager: '3',*/ standardUnit};
+const defaults = {defaultFundAmt: '10', defaultWager: '0.001', standardUnit};
 
 // Assume Alice has not completed any Weeks
 let weekOutcomeArray = [false, false, false];
@@ -28,10 +35,8 @@ class App extends React.Component {
     const bal = reach.formatCurrency(balAtomic, 4);
     this.setState({acc, bal});
     if (await reach.canFundFromFaucet()) {
-      //console.log("view: FundAccount");
       this.setState({view: 'FundAccount'});
     } else {
-      //console.log("view: DeployerOrAttacher");
       this.setState({view: 'DeployerOrAttacher'});
     }
   }
@@ -48,25 +53,35 @@ class App extends React.Component {
 
 class Player extends React.Component {
   // seeWeekOutcomeArray
-  seeWeekOutcomeArray(i) { this.setState({view: 'Done', outcome: i}); }
+  // BW: Changes to exports.Done is required
+  //     Do we need async?
+  //     What's the parameter outcome?
+  async seeWeekOutcomeArray() {
+    console.log(`Alice's weekly status is: ${weekOutcomeArray}`);
+    return weekOutcomeArray;
+  }
 }
 
 // Alice
 class Deployer extends Player {
-  setWager() {
-    console.log("setWager");
-    this.setState({view: 'Deploy'});
+  // BW: How do we remove the Wager's section and go directly to deploy?
+  constructor(props) {
+    super(props);
+    this.state = {view: 'Deploy'};
   }
+  // BW: Some changes to deploy() is also required
   async deploy() {
     const ctc = this.props.acc.contract(backend);
     this.setState({view: 'Deploying', ctc});
-    //this.wager = reach.parseCurrency(this.state.wager); // UInt
+    this.wager = reach.parseCurrency(0); // UInt
     this.deadline = {ETH: 10, ALGO: 100, CFX: 1000}[reach.connector]; // UInt
     backend.Alice(ctc, this);
     const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
     this.setState({view: 'WaitingForAttacher', ctcInfoStr});
+    console.log("deploy() has been completed!");
   }
-  // provideWeek
+  // Calling this function provideWeek instead of getHand
+  // Moved from Player to Deployer 
   async provideWeek() { // Fun([], UInt)
     const hand = await new Promise(resolveHandP => {
       this.setState({view: 'GetHand', playable: true, resolveHandP});
@@ -88,7 +103,8 @@ class Attacher extends Player {
     backend.Creator(ctc, this);
   }
   // updateWeekOutcomeArray
-  // react does not like this block of code?
+  // BW: react does not like this block of code?
+  //     All I want to do is to update the array
   updateWeekOutcomeArray(weekNumber, weekOutcome) {
     weekOutcomeArray[weekNumber] = weekOutcome;
   }
