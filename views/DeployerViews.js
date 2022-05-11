@@ -16,16 +16,23 @@ exports.GetHand = class extends React.Component {
         <br />
         <button
           disabled={!playable}
-          onClick={() => parent.playHand('#1')}
         >Module #1</button>
         <button
           disabled={!playable}
-          onClick={() => parent.playHand('#2')}
         >Module #2</button>
         <button
           disabled={!playable}
-          onClick={() => parent.playHand('#3')}
         >Module #3</button>
+      </div>
+    );
+  }
+}
+
+exports.WaitingForResults = class extends React.Component {
+  render() {
+    return (
+      <div>
+        Waiting for results...
       </div>
     );
   }
@@ -68,7 +75,7 @@ exports.Deploy = class extends React.Component {
     const {parent, wager, standardUnit} = this.props;
     return (
       <div>
-        Wager (pay to deploy): <strong>{wager}</strong> {standardUnit}
+        You are about to deploy the smart contract
         <br />
         <button
           onClick={() => parent.deploy()}

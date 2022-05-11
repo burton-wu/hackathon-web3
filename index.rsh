@@ -49,4 +49,11 @@ export const main = Reach.App(() => {
   Creator.publish(weekOutcomeArray2);
   commit();
 
+  Alice.only(() => {
+    const weekOutcomeArray3 = declassify(interact.seeWeekOutcomeArray());
+  });
+
+  Alice.publish(weekOutcomeArray3);
+  commit();
+
 });
