@@ -2,15 +2,27 @@ import React from 'react';
 
 const exports = {};
 
+// BW: Trying to rename this to say Results
 exports.Done = class extends React.Component {
   render() {
     const {outcome} = this.props;
-    console.log(`Done1 - ${outcome[0]}, ${outcome[1]}, ${outcome[2]}`);
-    console.log(`Done2 - ${outcome}`);
+    console.log(`outcomes are ${outcome[0]}, ${outcome[1]}, ${outcome[2]}`);
     return (
       <div>
         Alice's current results are:
-        <br />{outcome || '(Displaying Array Is Still Unresolved)'}
+        <br />{outcome}
+      </div>
+    );
+  }
+}
+
+// BW: New code added mirroring Done above
+exports.UpdateW = class extends React.Component {
+  render() {
+    const {week} = this.props;
+    return (
+      <div>
+        Updating the results of Week {week}...
       </div>
     );
   }

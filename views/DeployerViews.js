@@ -7,22 +7,23 @@ const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milli
 
 exports.GetHand = class extends React.Component {
   render() {
-    const {parent, playable, hand} = this.props;
+    const {parent, playable, hand, outcome} = this.props;
     return (
+      // onClick is for a function. So how to I return the value back?
       <div>
         {hand ? 'It was a draw! Pick again.' : ''}
         <br />
         {!playable ? 'Please wait...' : ''}
         <br />
         <button
-          disabled={!playable}
-        >Module #1</button>
+          disabled={!outcome[0]}
+        >Module 1<img src="1.png" height ="100" width="100"/></button>
         <button
-          disabled={!playable}
-        >Module #2</button>
+          disabled={!outcome[1]}
+        >Modele 2<img src="2.png" height ="100" width="100"/></button>
         <button
-          disabled={!playable}
-        >Module #3</button>
+          disabled={!outcome[2]}
+        >Module 3<img src="3.png" height ="100" width="100"/></button>
       </div>
     );
   }

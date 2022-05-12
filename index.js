@@ -16,11 +16,12 @@ reach.setWalletFallback(reach.walletFallback({
   providerEnv: 'TestNet', MyAlgoConnect }));
 
 //const handToInt = {'#1': 0, '#2': 1, '#3': 2};
+const handToInt = {'ROCK': 0, 'PAPER': 1, 'SCISSORS': 2};
 //const intToOutcome = ['Bob wins!', 'Draw!', 'Alice wins!'];
 const {standardUnit} = reach;
 const defaults = {defaultFundAmt: '10', /*defaultWager: '0.001',*/ standardUnit};
 
-// Assume Alice has not completed any Weeks
+// Initialise weekOutcomeArray; currently set Week 1 to be true
 let weekOutcomeArray = [true, false, false];
 
 // No change is required here
@@ -52,15 +53,21 @@ class App extends React.Component {
 }
 
 class Player extends React.Component {
+  // BW: Need a mini tour on syntex of this.setState, view, this.prob, render, etc
+  // BW: Unable to display weekOutcomeArray displayed on the screen. Why?
+  // BW: Why cannot I rename the view to say Results
   async seeWeekOutcomeArray() {
-    console.log(`Alice's weekly status is: ${weekOutcomeArray}`);
-    // Will mirror this with "Done" to show the results
     this.setState({view: 'Done', outcome: weekOutcomeArray});
-    if ( weekOutcomeArray[1] == true ) {
-      console.log(`I want to do something here <- logos`); // More important to be on Alice's side
-    }
-    // Plus an additional button to go back to provideWeek screen (except init)
+    console.log(`Alice's weekly results are: ${weekOutcomeArray}`);
     return weekOutcomeArray;
+  }
+  // BW: Alice doesn't see the outcome of this update if she doesn't run this? Why?
+  // BW: Why cannot I just create UpdateW?
+  async updateWeekOutcomeArray(weekNumber, weekOutcome) {
+    //this.setState({view: 'UpdateW', week: weekNumber});
+    weekOutcomeArray[weekNumber] = weekOutcome;
+    console.log(`Week index ${weekNumber} has been updated with ${weekOutcome}`);
+    console.log(`Weekoutcome Array is now ${weekOutcomeArray}`);
   }
 }
 
@@ -79,12 +86,33 @@ class Deployer extends Player {
     const ctcInfoStr = JSON.stringify(await ctc.getInfo(), null, 2);
     this.setState({view: 'WaitingForAttacher', ctcInfoStr});
   }
-  // BW: Interaction with Week # is required
+
+  // BW: What's this resolveHandP means?
+  //     How about onClick={() => parent.playHand('ROCK')}?
+  //     What's the parent thingy in view?
+  //     How do I pass weekOutcomeArray?
+  //     How do I show the icon?
+  //     How do I show different icons based on the conditions
+  // Req: The requirement is to display the webpage with 3 picture icons
+  //      If the week is true then icon is the grey out version and can be clicked
+  //      Else the week is the colour icon and cannot be clicked
+  //      Ideally seeWeekOutcomeArray is the cut down version of this ie display only
+  // GetHand and WaitingForResults have been copied to DeployerViews.js (may not be necessary)
   async provideWeek() { // Fun([], UInt)
-    // Currently hard code this to 1 (ie Week 2)
+    const hand = await new Promise(resolveHandP => {
+      this.setState({view: 'GetHand', playable: true, outcome: weekOutcomeArray, resolveHandP});
+    });
+    // BW: This line may not be needed as we will show the UpdateW screen
+    this.setState({view: 'WaitingForResults', hand});
+    return handToInt[hand];
+  }
+/*
+  // Currently hard code this to 1 (ie Week 2)
+  async provideWeek() { // Fun([], UInt)
     const hand = 1;
     return hand;
   }
+*/
   render() { return renderView(this, DeployerViews); }
 }
 
@@ -98,13 +126,7 @@ class Attacher extends Player {
     const ctc = this.props.acc.contract(backend, JSON.parse(ctcInfoStr));
     this.setState({view: 'Attaching'});
     backend.Creator(ctc, this);
-    console.log("Contract has been attahed");
-  }
-  // BW: Alice doesn't see the outcome of this update? Why?
-  async updateWeekOutcomeArray(weekNumber, weekOutcome) {
-    weekOutcomeArray[weekNumber] = weekOutcome;
-    console.log(`Week index ${weekNumber} has been updated with ${weekOutcome}`);
-    console.log(`Weekoutcome Array is ${weekOutcomeArray}`);
+    console.log("The Smart Contract has been attahed");
   }
   render() { return renderView(this, AttacherViews); }
 }
