@@ -6,17 +6,18 @@ const exports = {};
 exports.Done = class extends React.Component {
   render() {
     const {outcome} = this.props;
-    console.log(`outcomes are ${outcome[0]}, ${outcome[1]}, ${outcome[2]}`);
+    console.log(`outcomes are ${outcome[0]}, ${outcome[1]}, ${outcome[2]}`);    
     return (
       <div>
         Alice's current results are:
-        <br />{outcome}
+        <br />{outcome[0]}, {outcome[1]}, {outcome[2]}
+        <br />(Array Needs to be Displayed differently?)
       </div>
     );
   }
 }
 
-// BW: New code added mirroring Done above
+// BW: New code added mirroring Done above but not working
 exports.UpdateW = class extends React.Component {
   render() {
     const {week} = this.props;

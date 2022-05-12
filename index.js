@@ -55,14 +55,14 @@ class App extends React.Component {
 class Player extends React.Component {
   // BW: Need a mini tour on syntex of this.setState, view, this.prob, render, etc
   // BW: Unable to display weekOutcomeArray displayed on the screen. Why?
-  // BW: Why cannot I rename the view to say Results
+  // BW: Why cannot I rename the view to say Results?
   async seeWeekOutcomeArray() {
     this.setState({view: 'Done', outcome: weekOutcomeArray});
     console.log(`Alice's weekly results are: ${weekOutcomeArray}`);
     return weekOutcomeArray;
   }
   // BW: Alice doesn't see the outcome of this update if she doesn't run this? Why?
-  // BW: Why cannot I just create UpdateW?
+  // BW: Why cannot I just create screen UpdateW?
   async updateWeekOutcomeArray(weekNumber, weekOutcome) {
     //this.setState({view: 'UpdateW', week: weekNumber});
     weekOutcomeArray[weekNumber] = weekOutcome;
@@ -98,6 +98,7 @@ class Deployer extends Player {
   //      Else the week is the colour icon and cannot be clicked
   //      Ideally seeWeekOutcomeArray is the cut down version of this ie display only
   // GetHand and WaitingForResults have been copied to DeployerViews.js (may not be necessary)
+/*
   async provideWeek() { // Fun([], UInt)
     const hand = await new Promise(resolveHandP => {
       this.setState({view: 'GetHand', playable: true, outcome: weekOutcomeArray, resolveHandP});
@@ -106,13 +107,12 @@ class Deployer extends Player {
     this.setState({view: 'WaitingForResults', hand});
     return handToInt[hand];
   }
-/*
+*/
   // Currently hard code this to 1 (ie Week 2)
   async provideWeek() { // Fun([], UInt)
     const hand = 1;
     return hand;
   }
-*/
   render() { return renderView(this, DeployerViews); }
 }
 
