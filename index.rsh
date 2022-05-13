@@ -4,11 +4,13 @@
 // This iteration
 // [1*] Moved updateWeekOutcomeArray to Player (a workaround)
 // [2*] 
+// [3*] Change providerEnv to 'MainNet'
 
 // Next iteration will add back the following features:
 // [1*] While loop
 // [2] Overall badge
 // [3] Checking passcode
+// [4] NFT
 
 const Player = {
   seeWeekOutcomeArray: Fun([], Array(Bool,3)),
@@ -34,14 +36,6 @@ export const main = Reach.App(() => {
   });
 
   Alice.publish(weekOutcomeArray0);
-  commit();
-
-  // Display the initial weekly status (by Creator)
-  Creator.only(() => {
-    const weekOutcomeArray1 = declassify(interact.seeWeekOutcomeArray());
-  });
-
-  Creator.publish(weekOutcomeArray1);
   commit();
 
   // Alice requests assessment badge for Week X

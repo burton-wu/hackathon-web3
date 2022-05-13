@@ -22,7 +22,7 @@ const {standardUnit} = reach;
 const defaults = {defaultFundAmt: '10', /*defaultWager: '0.001',*/ standardUnit};
 
 // Initialise weekOutcomeArray; currently set Week 1 to be true
-let weekOutcomeArray = [true, false, false];
+let weekOutcomeArray = [false, false, true];
 
 // No change is required here
 class App extends React.Component {
@@ -88,31 +88,23 @@ class Deployer extends Player {
   }
 
   // BW: What's this resolveHandP means?
-  //     How about onClick={() => parent.playHand('ROCK')}?
-  //     What's the parent thingy in view?
   //     How do I pass weekOutcomeArray?
   //     How do I show the icon?
-  //     How do I show different icons based on the conditions
+  //     How do I show different icons based on the conditions?
   // Req: The requirement is to display the webpage with 3 picture icons
-  //      If the week is true then icon is the grey out version and can be clicked
+  //      If the week is true then icon is the grey out version and can be clicked ie alternative icons
   //      Else the week is the colour icon and cannot be clicked
   //      Ideally seeWeekOutcomeArray is the cut down version of this ie display only
-  // GetHand and WaitingForResults have been copied to DeployerViews.js (may not be necessary)
-/*
+  // GetHand and WaitingForResults have been copied to DeployerViews.js (Necessary?)
   async provideWeek() { // Fun([], UInt)
     const hand = await new Promise(resolveHandP => {
       this.setState({view: 'GetHand', playable: true, outcome: weekOutcomeArray, resolveHandP});
     });
-    // BW: This line may not be needed as we will show the UpdateW screen
+    console.log(`Modeule ${handToInt[hand]+1} has been selected`);
     this.setState({view: 'WaitingForResults', hand});
     return handToInt[hand];
   }
-*/
-  // Currently hard code this to 1 (ie Week 2)
-  async provideWeek() { // Fun([], UInt)
-    const hand = 1;
-    return hand;
-  }
+  playHand(hand) { this.state.resolveHandP(hand); }
   render() { return renderView(this, DeployerViews); }
 }
 
