@@ -1,6 +1,10 @@
 import React from 'react';
 import PlayerViews from './PlayerViews';
 
+import logo1 from './1.png';
+import logo2 from './2.png';
+import logo3 from './3.png';
+
 const exports = {...PlayerViews};
 
 const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -9,8 +13,10 @@ exports.GetHand = class extends React.Component {
   render() {
     const {parent, playable, hand, outcome} = this.props;
     return (
-      // onClick is for a function. So how to I return the value back?
+      // BW: Conditional statements are required: if disabled then greyout else standard picture
+      // BW: The png path needs to be adjusted when moves to MainNet 
       <div>
+        Please select the module for the badge. The sssessment fee is 0.5 ALGO.
         {hand ? 'It was a draw! Pick again.' : ''}
         <br />
         {!playable ? 'Please wait...' : ''}
@@ -18,15 +24,15 @@ exports.GetHand = class extends React.Component {
         <button
           disabled={outcome[0]}
           onClick={() => parent.playHand('ROCK')}
-        >Modele 1<img src="https://cdn.icon-icons.com/icons2/2596/PNG/512/check_one_icon_155665.png" height ="300" width="300"/></button>
+        >Modele 1<img src={logo1} alt={"logo1"} height ="200" width="200"/></button>
         <button
           disabled={outcome[1]}
           onClick={() => parent.playHand('PAPER')}
-        >Modele 2<img src="https://cdn.icon-icons.com/icons2/2596/PNG/512/check_one_icon_155665.png" height ="300" width="300"/></button>
+        >Modele 2<img src={logo2} alt={"logo2"} height ="200" width="200"/></button>
         <button
           disabled={outcome[2]}
           onClick={() => parent.playHand('SCISSORS')}
-        >Module 3<img src="https://cdn.icon-icons.com/icons2/2596/PNG/512/check_one_icon_155665.png" height ="300" width="300"/></button>
+        >Module 3<img src={logo3} alt={"logo3"} height ="200" width="200"/></button>
       </div>
     );
   }

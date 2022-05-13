@@ -2,23 +2,21 @@ import React from 'react';
 
 const exports = {};
 
-// BW: Trying to rename this to say Results
-exports.Done = class extends React.Component {
+exports.ViewResults = class extends React.Component {
   render() {
     const {outcome} = this.props;
-    console.log(`outcomes are ${outcome[0]}, ${outcome[1]}, ${outcome[2]}`);    
+    console.log(`outcomes are ${outcome[0]}, ${outcome[1]}, ${outcome[2]}`);
+    // BW: We may want to improve the UI here    
     return (
       <div>
         Alice's current results are:
-        <br />{outcome[0]}, {outcome[1]}, {outcome[2]}
-        <br />(Array Needs to be Displayed differently?)
+        <br />{String(outcome[0])}, {String(outcome[1])}, {String(outcome[2])}
       </div>
     );
   }
 }
 
-// BW: New code added mirroring Done above but not working
-exports.UpdateW = class extends React.Component {
+exports.UpdateResults = class extends React.Component {
   render() {
     const {week} = this.props;
     return (

@@ -15,14 +15,13 @@ import { ALGO_MyAlgoConnect as MyAlgoConnect } from '@reach-sh/stdlib';
 reach.setWalletFallback(reach.walletFallback({
   providerEnv: 'TestNet', MyAlgoConnect }));
 
-//const handToInt = {'#1': 0, '#2': 1, '#3': 2};
 const handToInt = {'ROCK': 0, 'PAPER': 1, 'SCISSORS': 2};
 //const intToOutcome = ['Bob wins!', 'Draw!', 'Alice wins!'];
 const {standardUnit} = reach;
 const defaults = {defaultFundAmt: '10', /*defaultWager: '0.001',*/ standardUnit};
 
-// Initialise weekOutcomeArray; currently set Week 1 to be true
-let weekOutcomeArray = [false, false, true];
+// Initialise weekOutcomeArray ie Alice's current status
+let weekOutcomeArray = [true, false, true];
 
 // No change is required here
 class App extends React.Component {
@@ -53,18 +52,15 @@ class App extends React.Component {
 }
 
 class Player extends React.Component {
-  // BW: Need a mini tour on syntex of this.setState, view, this.prob, render, etc
-  // BW: Unable to display weekOutcomeArray displayed on the screen. Why?
-  // BW: Why cannot I rename the view to say Results?
   async seeWeekOutcomeArray() {
-    this.setState({view: 'Done', outcome: weekOutcomeArray});
+    this.setState({view: 'ViewResults', outcome: weekOutcomeArray});
     console.log(`Alice's weekly results are: ${weekOutcomeArray}`);
     return weekOutcomeArray;
   }
   // BW: Alice doesn't see the outcome of this update if she doesn't run this? Why?
-  // BW: Why cannot I just create screen UpdateW?
+  // BW: Why is screen UpdateResults not showing up? weekOutcome may not be the right variable type
   async updateWeekOutcomeArray(weekNumber, weekOutcome) {
-    //this.setState({view: 'UpdateW', week: weekNumber});
+    //this.setState({view: 'UpdateResults', week: weekNumber});
     weekOutcomeArray[weekNumber] = weekOutcome;
     console.log(`Week index ${weekNumber} has been updated with ${weekOutcome}`);
     console.log(`Weekoutcome Array is now ${weekOutcomeArray}`);
@@ -87,14 +83,9 @@ class Deployer extends Player {
     this.setState({view: 'WaitingForAttacher', ctcInfoStr});
   }
 
-  // BW: What's this resolveHandP means?
-  //     How do I pass weekOutcomeArray?
-  //     How do I show the icon?
-  //     How do I show different icons based on the conditions?
   // Req: The requirement is to display the webpage with 3 picture icons
-  //      If the week is true then icon is the grey out version and can be clicked ie alternative icons
+  //      If the week is true then icon is the grey out version
   //      Else the week is the colour icon and cannot be clicked
-  //      Ideally seeWeekOutcomeArray is the cut down version of this ie display only
   // GetHand and WaitingForResults have been copied to DeployerViews.js (Necessary?)
   async provideWeek() { // Fun([], UInt)
     const hand = await new Promise(resolveHandP => {
@@ -119,6 +110,11 @@ class Attacher extends Player {
     this.setState({view: 'Attaching'});
     backend.Creator(ctc, this);
     console.log("The Smart Contract has been attahed");
+  }
+  async setFee() {
+    const assessmentFee = reach.parseCurrency(0.5);
+    console.log(`Creator sets the assessment fee of ${reach.formatCurrency(assessmentFee,4)}`);
+    return assessmentFee;
   }
   render() { return renderView(this, AttacherViews); }
 }

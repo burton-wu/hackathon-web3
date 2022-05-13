@@ -1,16 +1,21 @@
 'reach 0.1';
 'use strict';
 
-// This iteration
-// [1*] Moved updateWeekOutcomeArray to Player (a workaround)
-// [2*] 
-// [3*] Change providerEnv to 'MainNet'
+// This iteration (MVP)
+// [1] Moved updateWeekOutcomeArray to Player (a workaround)
+// [2] Pay/transfer 0.5 ALGO (assessment fee)
 
 // Next iteration will add back the following features:
-// [1] Pay transfer
-// [2] Overall badge
-// [3] Checking passcode
-// [4] NFT
+// [3*] Improve DeployerViews.js's GetHand screen
+// [4*] Improve PlayerViews.js's ViewResults screen
+// [5*] Change providerEnv to 'MainNet'
+
+// Future development
+// [6*] Overall badge
+// [7*] Checking passcode
+// [8*] NFT
+
+// * Still needs to be done
 
 const Player = {
   seeWeekOutcomeArray: Fun([], Array(Bool,3)),
@@ -21,6 +26,7 @@ export const main = Reach.App(() => {
 
   const Creator = Participant('Creator', {
     ...Player,
+    setFee: Fun([], UInt),
   });
 
   const Alice = Participant('Alice', {
@@ -49,6 +55,13 @@ export const main = Reach.App(() => {
   invariant ( balance() == 0 );
   while ( STOPPING == false) {
 
+    commit();
+
+    // Creator determines the assessment fee
+    Creator.only(() => {
+      const assessmentFee = declassify(interact.setFee());
+    });
+    Creator.publish(assessmentFee);
     commit();
 
     // Alice requests assessment badge for Week X
@@ -80,6 +93,11 @@ export const main = Reach.App(() => {
     });
 
     Alice.publish(weekOutcomeArray3);
+    commit();
+
+    // Alice pays the assessment fee regardless the outcome
+    Alice.pay(assessmentFee);
+    transfer(assessmentFee).to(Creator);
 
     // Creator assesses the overall outcome (and did not pass overall before)
     const overallOutcome = ( weekOutcomeArray2[0] == true &&
