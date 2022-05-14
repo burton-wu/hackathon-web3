@@ -21,7 +21,7 @@ const {standardUnit} = reach;
 const defaults = {defaultFundAmt: '10', /*defaultWager: '0.001',*/ standardUnit};
 
 // Initialise weekOutcomeArray ie Alice's current status
-let weekOutcomeArray = [true, false, true];
+let weekOutcomeArray = [false, true, false];
 
 // No change is required here
 class App extends React.Component {

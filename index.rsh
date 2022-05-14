@@ -1,19 +1,23 @@
 'reach 0.1';
 'use strict';
 
-// This iteration (MVP)
+// This iteration (MVP):
 // [1] Moved updateWeekOutcomeArray to Player (a workaround)
 // [2] Pay/transfer 0.5 ALGO (assessment fee)
 
-// Next iteration will add back the following features:
+// Next iteration will need to do the following:
 // [3*] Improve DeployerViews.js's GetHand screen
 // [4*] Improve PlayerViews.js's ViewResults screen
-// [5*] Change providerEnv to 'MainNet'
-
-// Future development
+// [5*] Other CSS and User Experience screen improvements
 // [6*] Overall badge
-// [7*] Checking passcode
-// [8*] NFT
+// [7*] Change providerEnv to 'MainNet' including PNG path
+
+// [*] Remove most of wallet sign-in's
+// [*] Add the "What's your name?" interaction
+
+// Future development (adding back previous features):
+// [8*] Checking passcode
+// [9*] NFT
 
 // * Still needs to be done
 
