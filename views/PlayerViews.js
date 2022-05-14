@@ -18,10 +18,9 @@ exports.ViewResults = class extends React.Component {
 
 exports.UpdateResults = class extends React.Component {
   render() {
-    const {week} = this.props;
     return (
       <div>
-        Updating the results of Week {week}...
+        Issuing the module badge...
       </div>
     );
   }

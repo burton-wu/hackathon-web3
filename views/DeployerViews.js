@@ -16,8 +16,8 @@ exports.GetHand = class extends React.Component {
       // BW: Conditional statements are required: if disabled then greyout else standard picture
       // BW: The png path needs to be adjusted when moves to MainNet 
       <div>
-        Please select the module for the badge. The sssessment fee is 0.5 ALGO.
-        {hand ? 'It was a draw! Pick again.' : ''}
+        Please select the module badge you'd like to collect.
+        {hand ? '' : ''}
         <br />
         {!playable ? 'Please wait...' : ''}
         <br />
@@ -53,7 +53,7 @@ exports.Wrapper = class extends React.Component {
     const {content} = this.props;
     return (
       <div className="Deployer">
-        <h2>Deployer (Alice)</h2>
+        <h2>The happy customer!</h2>
         {content}
       </div>
     );
@@ -85,11 +85,11 @@ exports.Deploy = class extends React.Component {
     const {parent, wager, standardUnit} = this.props;
     return (
       <div>
-        You are about to deploy the smart contract
+        The assessment fee is 0.5 ALGO for each module.
         <br />
         <button
           onClick={() => parent.deploy()}
-        >Deploy</button>
+        >Accept</button>
       </div>
     );
   }

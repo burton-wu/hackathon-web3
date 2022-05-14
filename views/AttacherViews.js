@@ -8,7 +8,7 @@ exports.Wrapper = class extends React.Component {
     const {content} = this.props;
     return (
       <div className="Attacher">
-        <h2>Attacher (Creator)</h2>
+        <h2>KINSPACE</h2>
         {content}
       </div>
     );

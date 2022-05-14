@@ -60,7 +60,7 @@ class Player extends React.Component {
   // BW: Alice doesn't see the outcome of this update if she doesn't run this? Why?
   // BW: Why is screen UpdateResults not showing up? weekOutcome may not be the right variable type
   async updateWeekOutcomeArray(weekNumber, weekOutcome) {
-    //this.setState({view: 'UpdateResults', week: weekNumber});
+    this.setState({view: 'UpdateResults'/*, week: weekNumber}*/});
     weekOutcomeArray[weekNumber] = weekOutcome;
     console.log(`Week index ${weekNumber} has been updated with ${weekOutcome}`);
     console.log(`Weekoutcome Array is now ${weekOutcomeArray}`);
